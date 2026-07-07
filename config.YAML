@@ -1,8 +1,3 @@
-# ============================================================
-# GMO-BINN Experiment Configuration
-# ============================================================
-
-# --- Ground-truth GRN ---
 grn:
   n_native_genes: 10
   n_transgenes: 1            # Bt or EPSPS-like insert
@@ -10,7 +5,7 @@ grn:
   edge_density: 0.25         # fraction of possible edges that exist
   activation_ratio: 0.6      # fraction of edges that are activating (vs repressing)
 
-# --- ODE dynamics ---
+
 dynamics:
   hill_n: 3.0                # Hill coefficient
   hill_k: 0.5                # Half-max constant
@@ -20,7 +15,7 @@ dynamics:
   t_span: [0.0, 10.0]        # Simulation time window
   n_timepoints: 50           # Sampled time points
 
-# --- Data generation ---
+
 data:
   n_conditions: 5            # Different GMO lines (copy number / insertion contexts)
   noise_std: 0.05            # Gaussian noise on expression values
@@ -28,19 +23,18 @@ data:
   train_time_fraction: 0.7   # First 70% of timepoints for training, rest held out
   seed: 42
 
-# --- Prior network (imperfect) ---
+
 prior:
   edge_drop_rate: 0.30       # Fraction of true edges removed from prior
   false_edge_rate: 0.10      # Fraction of false edges added to prior
 
-# --- Model hyperparameters ---
+
 model:
   hidden_dim: 32
   n_hidden_layers: 2
   use_hill_activation: true  # BINN only
   hill_n_learnable: false    # If true, Hill coefficient is a parameter
 
-# --- Training ---
 training:
   n_epochs: 1000
   learning_rate: 0.005
@@ -51,7 +45,7 @@ training:
   scheduler_patience: 30
   early_stop_patience: 60
 
-# --- Evaluation ---
+
 evaluation:
   n_seeds: 5                 # For identifiability stress test
   auroc_threshold: 0.5       # Random baseline for edge recovery
