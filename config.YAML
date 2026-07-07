@@ -1,0 +1,61 @@
+# ============================================================
+# GMO-BINN Experiment Configuration
+# ============================================================
+
+# --- Ground-truth GRN ---
+grn:
+  n_native_genes: 10
+  n_transgenes: 1            # Bt or EPSPS-like insert
+  n_total: 11                # native + transgene
+  edge_density: 0.25         # fraction of possible edges that exist
+  activation_ratio: 0.6      # fraction of edges that are activating (vs repressing)
+
+# --- ODE dynamics ---
+dynamics:
+  hill_n: 3.0                # Hill coefficient
+  hill_k: 0.5                # Half-max constant
+  degradation_range: [0.1, 0.5]
+  basal_expression_range: [0.01, 0.1]
+  transgene_basal: 0.8       # Strong constitutive promoter for the transgene
+  t_span: [0.0, 10.0]        # Simulation time window
+  n_timepoints: 50           # Sampled time points
+
+# --- Data generation ---
+data:
+  n_conditions: 5            # Different GMO lines (copy number / insertion contexts)
+  noise_std: 0.05            # Gaussian noise on expression values
+  dropout_rate: 0.1          # Fraction of measurements set to zero (sparsity)
+  train_time_fraction: 0.7   # First 70% of timepoints for training, rest held out
+  seed: 42
+
+# --- Prior network (imperfect) ---
+prior:
+  edge_drop_rate: 0.30       # Fraction of true edges removed from prior
+  false_edge_rate: 0.10      # Fraction of false edges added to prior
+
+# --- Model hyperparameters ---
+model:
+  hidden_dim: 32
+  n_hidden_layers: 2
+  use_hill_activation: true  # BINN only
+  hill_n_learnable: false    # If true, Hill coefficient is a parameter
+
+# --- Training ---
+training:
+  n_epochs: 1000
+  learning_rate: 0.005
+  weight_decay: 1.0e-5
+  l1_lambda: 0.001            # L1 sparsity on interaction weights
+  prior_penalty_lambda: 0.005 # Extra penalty on edges absent from prior (BINN only)
+  batch_size: 16
+  scheduler_patience: 30
+  early_stop_patience: 60
+
+# --- Evaluation ---
+evaluation:
+  n_seeds: 5                 # For identifiability stress test
+  auroc_threshold: 0.5       # Random baseline for edge recovery
+  stress_test_epochs: 300    # Reduced budget per seed (5 seeds x 2 models x full
+                              # 1000 epochs would take ~10x longer for a robustness
+                              # check; raise this if you want fully-converged seeds)
+  top_k_transgene: 3         # Top-K native genes checked for transgene-target stability
