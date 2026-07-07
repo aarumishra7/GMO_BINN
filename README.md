@@ -1,2 +1,1 @@
-# Alzheimer-s-CSF-BINN
-A progress in BINN
+# A Case Study on BINN and there application in GMO
